@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nature Picture Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--forest:#1a2e1a;--moss:#3d5c2e;--leaf:#6b8f52;--sage:#a8c490;--mist:#e8f0e0;--stone:#8c8272;--cream:#f5f0e8;--white:#fdfcfa;--danger:#c0392b;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;background:var(--white);color:var(--forest);min-height:100vh;}
+header{background:var(--forest);color:var(--cream);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:72px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--moss);}
+.brand{display:flex;align-items:center;gap:.75rem;}
+.brand-icon{width:36px;height:36px;background:var(--leaf);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.brand h1{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;letter-spacing:.02em;}
+.brand span{font-size:.7rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:var(--sage);display:block;margin-top:-2px;}
+.header-actions{display:flex;gap:1rem;align-items:center;}
+.btn{padding:.5rem 1.2rem;border-radius:4px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:all .2s;letter-spacing:.05em;}
+.btn-primary{background:var(--leaf);color:var(--white);}
+.btn-primary:hover{background:var(--moss);}
+.btn-outline{background:transparent;color:var(--cream);border:1px solid var(--stone);}
+.btn-outline:hover{border-color:var(--sage);color:var(--sage);}
+.btn-edit{background:transparent;color:var(--moss);border:1px solid var(--leaf);font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;padding:.3rem .8rem;border-radius:4px;cursor:pointer;transition:all .2s;}
+.btn-edit:hover{background:var(--mist);}
+.btn-del{background:var(--danger);color:white;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;padding:.3rem .8rem;border-radius:4px;cursor:pointer;border:none;transition:opacity .2s;}
+.btn-del:hover{opacity:.85;}
+.hero{background:linear-gradient(135deg,var(--forest) 0%,var(--moss) 60%,var(--leaf) 100%);color:var(--cream);text-align:center;padding:3.5rem 2rem 2.5rem;position:relative;overflow:hidden;}
+.hero h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:400;font-style:italic;margin-bottom:.5rem;position:relative;}
+.hero p{font-size:.95rem;font-weight:300;color:var(--sage);letter-spacing:.1em;position:relative;}
+.stats-bar{background:var(--mist);border-bottom:1px solid #d0dcc0;padding:.75rem 2.5rem;display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap;}
+.stat{font-size:.82rem;color:var(--moss);}
+.stat strong{color:var(--forest);}
+.filter-bar{padding:1rem 2.5rem;display:flex;gap:.5rem;flex-wrap:wrap;border-bottom:1px solid #e0e8d4;align-items:center;}
+.filter-label{font-size:.78rem;color:var(--stone);margin-right:.25rem;letter-spacing:.05em;}
+.filter-btn{padding:.3rem .9rem;border-radius:20px;border:1px solid #c8d8b0;background:transparent;font-family:'Jost',sans-serif;font-size:.78rem;cursor:pointer;color:var(--moss);transition:all .2s;}
+.filter-btn.active,.filter-btn:hover{background:var(--moss);color:var(--white);border-color:var(--moss);}
+main{padding:2rem 2.5rem;}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.5rem;}
+.card{background:var(--white);border:1px solid #dde8cc;border-radius:8px;overflow:hidden;transition:transform .2s,box-shadow .2s;animation:fadeUp .4s ease both;}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,46,26,.13);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.card-img-wrap{position:relative;overflow:hidden;cursor:pointer;}
+.card-img{width:100%;height:210px;object-fit:cover;display:block;transition:transform .35s;}
+.card-img-wrap:hover .card-img{transform:scale(1.04);}
+.card-img-overlay{position:absolute;inset:0;background:rgba(26,46,26,0);transition:background .25s;display:flex;align-items:center;justify-content:center;}
+.card-img-wrap:hover .card-img-overlay{background:rgba(26,46,26,.18);}
+.overlay-icon{color:white;font-size:2rem;opacity:0;transition:opacity .2s;}
+.card-img-wrap:hover .overlay-icon{opacity:1;}
+.card-body{padding:.9rem 1rem 1rem;}
+.card-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--forest);margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-meta{font-size:.73rem;color:var(--stone);margin-bottom:.55rem;}
+.card-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem;min-height:22px;}
+.tag{background:var(--mist);color:var(--moss);font-size:.66rem;padding:.12rem .45rem;border-radius:10px;font-weight:500;letter-spacing:.04em;}
+.card-actions{display:flex;gap:.5rem;}
+.empty{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--stone);}
+.empty-icon{font-size:4rem;margin-bottom:1rem;}
+.empty h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:.5rem;color:var(--forest);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,10,.72);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:10px;padding:2rem;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:modalIn .22s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.25rem;}
+.modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--stone);line-height:1;}
+.modal-close:hover{color:var(--forest);}
+label{display:block;font-size:.78rem;font-weight:500;color:var(--moss);margin-bottom:.3rem;letter-spacing:.06em;text-transform:uppercase;}
+input[type=text],select{width:100%;padding:.6rem .85rem;border:1px solid #c8d8b0;border-radius:5px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--forest);background:var(--white);margin-bottom:1rem;transition:border-color .2s;}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--leaf);}
+.drop-zone{border:2px dashed #a8c490;border-radius:8px;padding:2.2rem 1rem;text-align:center;cursor:pointer;margin-bottom:1rem;transition:background .2s;}
+.drop-zone:hover,.drop-zone.dragover{background:var(--mist);border-color:var(--leaf);}
+.drop-zone-icon{font-size:2.4rem;margin-bottom:.4rem;}
+.drop-zone-text{color:var(--stone);font-size:.82rem;line-height:1.5;}
+.drop-zone-text strong{color:var(--moss);}
+.preview-img{width:100%;max-height:220px;object-fit:cover;border-radius:6px;margin-bottom:1rem;display:none;border:1px solid #d0dcc0;}
+.modal-actions{display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem;}
+.status-bar{padding:.55rem .9rem;border-radius:4px;font-size:.8rem;margin-bottom:1rem;display:none;}
+.status-bar.success{background:#e8f5e9;color:#2e7d32;display:block;}
+.status-bar.error{background:#ffebee;color:#c62828;display:block;}
+.status-bar.loading{background:var(--mist);color:var(--moss);display:block;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;align-items:center;justify-content:center;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:88vh;border-radius:4px;object-fit:contain;}
+.lightbox-close{position:absolute;top:1.5rem;right:2rem;color:white;font-size:2rem;cursor:pointer;line-height:1;background:none;border:none;}
+.lightbox-caption{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:white;font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;background:rgba(0,0,0,.5);padding:.4rem 1.2rem;border-radius:20px;white-space:nowrap;}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--forest);color:var(--cream);padding:.7rem 1.2rem;border-radius:6px;font-size:.83rem;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.spinner{width:16px;height:16px;border:2px solid var(--mist);border-top-color:var(--leaf);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:.4rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.api-badge{background:#fff8e1;border:1px solid #ffe082;border-radius:5px;padding:.6rem .85rem;font-size:.76rem;color:#5d4037;margin-bottom:1.2rem;}
+.api-badge code{font-size:.72rem;background:#ffefc0;padding:0 3px;border-radius:2px;}
+@media(max-width:600px){header{padding:0 1rem;}main{padding:1.5rem 1rem;}.stats-bar,.filter-bar{padding:.75rem 1rem;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">🌿</div>
+    <div>
+      <h1>Nature Picture Media</h1>
+      <span>Image Gallery · Cloud Native</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="loadMedia()">&#8635; Refresh</button>
+    <button class="btn btn-primary" onclick="openUploadModal()">+ Upload Image</button>
+  </div>
+</header>
+
+<div class="hero">
+  <h2>Capture the Wild</h2>
+  <p>Upload &middot; Explore &middot; Preserve &middot; Share</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">Total images: <strong id="stat-total">0</strong></div>
+  <div class="stat">Storage used: <strong id="stat-size">0 MB</strong></div>
+  <div class="stat">Last upload: <strong id="stat-last">&#8212;</strong></div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Category:</span>
+  <button class="filter-btn active" onclick="filterMedia('all',this)">All</button>
+  <button class="filter-btn" onclick="filterMedia('forest',this)">Forest</button>
+  <button class="filter-btn" onclick="filterMedia('ocean',this)">Ocean</button>
+  <button class="filter-btn" onclick="filterMedia('mountain',this)">Mountain</button>
+  <button class="filter-btn" onclick="filterMedia('wildlife',this)">Wildlife</button>
+  <button class="filter-btn" onclick="filterMedia('sky',this)">Sky</button>
+  <button class="filter-btn" onclick="filterMedia('flora',this)">Flora</button>
+</div>
+
+<main>
+  <div class="gallery" id="gallery">
+    <div class="empty">
+      <div class="empty-icon">&#127794;</div>
+      <h3>No images yet</h3>
+      <p>Upload your first nature photograph to begin</p>
+    </div>
+  </div>
+</main>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="upload-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Upload Nature Image</div>
+      <button class="modal-close" onclick="closeModal('upload-modal')">&#10005;</button>
+    </div>
+    <div class="api-badge">
+      Set <code>API_BASE</code> at the top of the script to your Azure App Service URL to enable cloud storage.
+    </div>
+    <div id="upload-status" class="status-bar"></div>
+    <label>Image file (JPG, PNG, WEBP, GIF)</label>
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="drop-zone-icon">&#128444;</div>
+      <div class="drop-zone-text"><strong>Drag and drop</strong> your image here<br/>or click to browse</div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileSelect(this)"/>
+    <img id="preview-img" class="preview-img" alt="Preview"/>
+    <label>Title</label>
+    <input type="text" id="upload-title" placeholder="e.g. Misty Forest at Dawn"/>
+    <label>Category</label>
+    <select id="upload-category">
+      <option value="forest">Forest</option>
+      <option value="ocean">Ocean</option>
+      <option value="mountain">Mountain</option>
+      <option value="wildlife">Wildlife</option>
+      <option value="sky">Sky</option>
+      <option value="flora">Flora</option>
+      <option value="other">Other</option>
+    </select>
+    <label>Tags (comma separated)</label>
+    <input type="text" id="upload-tags" placeholder="e.g. green, misty, morning light"/>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--stone);border-color:var(--stone)" onclick="closeModal('upload-modal')">Cancel</button>
+      <button class="btn btn-primary" id="upload-btn" onclick="uploadMedia()">Upload Image</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Image Details</div>
+      <button class="modal-close" onclick="closeModal('edit-modal')">&#10005;</button>
+    </div>
+    <div id="edit-status" class="status-bar"></div>
+    <input type="hidden" id="edit-id"/>
+    <img id="edit-preview" class="preview-img" alt=""/>
+    <label>Title</label>
+    <input type="text" id="edit-title"/>
+    <label>Category</label>
+    <select id="edit-category">
+      <option value="forest">Forest</option>
+      <option value="ocean">Ocean</option>
+      <option value="mountain">Mountain</option>
+      <option value="wildlife">Wildlife</option>
+      <option value="sky">Sky</option>
+      <option value="flora">Flora</option>
+      <option value="other">Other</option>
+    </select>
+    <label>Tags (comma separated)</label>
+    <input type="text" id="edit-tags"/>
+    <div class="modal-actions">
+      <button class="btn btn-outline" style="color:var(--stone);border-color:var(--stone)" onclick="closeModal('edit-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">&#10005;</button>
+  <img id="lightbox-img" src="" alt=""/>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AZURE CONFIG ─────────────────────────────────────────
+const API_BASE = 'YOUR_AZURE_APP_SERVICE_URL';
+// Replace with: 'https://nature-media.azurewebsites.net'
+// ─────────────────────────────────────────────────────────
+
+const DEMO_MODE = API_BASE === 'YOUR_AZURE_APP_SERVICE_URL';
+let imageStore = JSON.parse(localStorage.getItem('nature_images') || '[]');
+let currentFilter = 'all';
+
+function saveLocal() { localStorage.setItem('nature_images', JSON.stringify(imageStore)); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+function setStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  el.className = 'status-bar ' + type;
+  el.innerHTML = type === 'loading' ? '<span class="spinner"></span>' + msg : msg;
+}
+function clearStatus(id) { document.getElementById(id).className = 'status-bar'; }
+
+function openUploadModal() {
+  document.getElementById('upload-modal').classList.add('open');
+  document.getElementById('upload-title').value = '';
+  document.getElementById('upload-tags').value = '';
+  document.getElementById('file-input').value = '';
+  document.getElementById('preview-img').style.display = 'none';
+  clearStatus('upload-status');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', function() { dz.classList.remove('dragover'); });
+dz.addEventListener('drop', function(e) {
+  e.preventDefault(); dz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleFile(file);
+  else showToast('Images only (JPG, PNG, WEBP, GIF)');
+});
+function handleFileSelect(input) { if (input.files[0]) handleFile(input.files[0]); }
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const p = document.getElementById('preview-img');
+    p.src = e.target.result; p.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  if (!document.getElementById('upload-title').value)
+    document.getElementById('upload-title').value =
+      file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+}
+
+// CREATE
+async function uploadMedia() {
+  const file  = document.getElementById('file-input').files[0];
+  const title = document.getElementById('upload-title').value.trim();
+  const tags  = document.getElementById('upload-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
+  const cat   = document.getElementById('upload-category').value;
+  if (!file)  { setStatus('upload-status', 'Please select an image.', 'error'); return; }
+  if (!title) { setStatus('upload-status', 'Please enter a title.', 'error'); return; }
+  setStatus('upload-status', 'Uploading image...', 'loading');
+  document.getElementById('upload-btn').disabled = true;
+  if (!DEMO_MODE) {
+    try {
+      const fd = new FormData();
+      fd.append('file', file); fd.append('title', title);
+      fd.append('tags', JSON.stringify(tags)); fd.append('category', cat);
+      const res = await fetch(API_BASE + '/api/images', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('Server ' + res.status);
+      const data = await res.json();
+      imageStore.unshift(data); saveLocal(); renderGallery();
+      closeModal('upload-modal'); showToast('Image uploaded to Azure Blob Storage!');
+    } catch(e) { setStatus('upload-status', 'Upload failed: ' + e.message, 'error'); }
+  } else {
+    await new Promise(function(r){setTimeout(r,600);});
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      imageStore.unshift({
+        id: 'img_' + Date.now(), title: title, tags: tags, category: cat,
+        blob_url: ev.target.result, file_name: file.name,
+        size_bytes: file.size, uploaded_at: new Date().toISOString()
+      });
+      saveLocal(); renderGallery();
+      closeModal('upload-modal');
+      showToast('Saved locally — connect Azure to persist in cloud');
+    };
+    reader.readAsDataURL(file);
+  }
+  document.getElementById('upload-btn').disabled = false;
+}
+
+// READ
+async function loadMedia() {
+  if (DEMO_MODE) { renderGallery(); return; }
+  try {
+    const res = await fetch(API_BASE + '/api/images');
+    const data = await res.json();
+    imageStore = Array.isArray(data) ? data : (data.items || []);
+    saveLocal(); renderGallery(); showToast('Refreshed from Azure');
+  } catch(e) { renderGallery(); showToast('Showing local data'); }
+}
+
+function filterMedia(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderGallery();
+}
+
+function renderGallery() {
+  const gallery  = document.getElementById('gallery');
+  const filtered = currentFilter === 'all'
+    ? imageStore
+    : imageStore.filter(function(m){return m.category === currentFilter;});
+
+  document.getElementById('stat-total').textContent = imageStore.length;
+  const mb = (imageStore.reduce(function(s,m){return s+(m.size_bytes||0);},0)/1048576).toFixed(2);
+  document.getElementById('stat-size').textContent = mb + ' MB';
+  document.getElementById('stat-last').textContent =
+    imageStore.length ? formatDate(imageStore[0].uploaded_at) : '\u2014';
+
+  if (!filtered.length) {
+    gallery.innerHTML = '<div class="empty"><div class="empty-icon">&#127794;</div><h3>' +
+      (currentFilter==='all' ? 'No images yet' : 'No '+currentFilter+' images yet') +
+      '</h3><p>Upload your first nature photograph to begin</p></div>';
+    return;
+  }
+  gallery.innerHTML = filtered.map(function(m,i){
+    return '<div class="card" style="animation-delay:' + (i*.05) + 's">' +
+      '<div class="card-img-wrap" onclick="openLightbox(\'' + m.id + '\')">' +
+      '<img class="card-img" src="' + (m.blob_url||'') + '" alt="' + m.title + '" loading="lazy"/>' +
+      '<div class="card-img-overlay"><span class="overlay-icon">&#128269;</span></div></div>' +
+      '<div class="card-body">' +
+      '<div class="card-title" title="' + m.title + '">' + m.title + '</div>' +
+      '<div class="card-meta">' + (m.category||'nature') + ' &middot; ' + formatDate(m.uploaded_at) + '</div>' +
+      '<div class="card-tags">' + (m.tags||[]).map(function(t){return '<span class="tag">'+t+'</span>';}).join('') + '</div>' +
+      '<div class="card-actions">' +
+      '<button class="btn-edit" onclick="openEditModal(\'' + m.id + '\')">Edit</button>' +
+      '<button class="btn-del" onclick="deleteMedia(\'' + m.id + '\')">Delete</button>' +
+      '</div></div></div>';
+  }).join('');
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function openLightbox(id) {
+  const item = imageStore.find(function(m){return m.id===id;}); if(!item) return;
+  document.getElementById('lightbox-img').src = item.blob_url||'';
+  document.getElementById('lightbox-caption').textContent = item.title;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+function openEditModal(id) {
+  const item = imageStore.find(function(m){return m.id===id;}); if(!item) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-title').value = item.title;
+  document.getElementById('edit-category').value = item.category||'other';
+  document.getElementById('edit-tags').value = (item.tags||[]).join(', ');
+  const ep = document.getElementById('edit-preview');
+  ep.src = item.blob_url||''; ep.style.display = item.blob_url ? 'block' : 'none';
+  clearStatus('edit-status');
+  document.getElementById('edit-modal').classList.add('open');
+}
+async function saveEdit() {
+  const id    = document.getElementById('edit-id').value;
+  const title = document.getElementById('edit-title').value.trim();
+  const tags  = document.getElementById('edit-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
+  const cat   = document.getElementById('edit-category').value;
+  if (!title) { setStatus('edit-status','Title cannot be empty.','error'); return; }
+  setStatus('edit-status','Saving...','loading');
+  if (!DEMO_MODE) {
+    try {
+      const res = await fetch(API_BASE + '/api/images/' + id, {
+        method:'PUT', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({title:title,tags:tags,category:cat})
+      });
+      if (!res.ok) throw new Error('Server ' + res.status);
+    } catch(e) { setStatus('edit-status','Update failed: '+e.message,'error'); return; }
+  } else { await new Promise(function(r){setTimeout(r,400);}); }
+  const idx = imageStore.findIndex(function(m){return m.id===id;});
+  if (idx>-1) imageStore[idx] = Object.assign({},imageStore[idx],{title:title,tags:tags,category:cat});
+  saveLocal(); renderGallery(); closeModal('edit-modal'); showToast('Image details updated!');
+}
+
+async function deleteMedia(id) {
+  if (!confirm('Delete this image? This cannot be undone.')) return;
+  if (!DEMO_MODE) {
+    try {
+      const res = await fetch(API_BASE + '/api/images/' + id, {method:'DELETE'});
+      if (!res.ok) throw new Error('Server ' + res.status);
+    } catch(e) { showToast('Delete failed: '+e.message); return; }
+  }
+  imageStore = imageStore.filter(function(m){return m.id!==id;});
+  saveLocal(); renderGallery(); showToast('Image deleted.');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key==='Escape') { closeLightbox(); closeModal('upload-modal'); closeModal('edit-modal'); }
+});
+
+loadMedia();
+</script>
+</body>
+</html>
